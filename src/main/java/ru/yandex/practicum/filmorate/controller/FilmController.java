@@ -38,7 +38,7 @@ public class FilmController {
         if (film.getDescription() != null) {
             if (film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
                 LOG.warn("Film description is too long");
-                throw new ValidationException("Описание фильма не может быть больше " + MAX_DESCRIPTION_LENGTH + " символов");
+                throw new ValidationException("Описание фильма не может превышать " + MAX_DESCRIPTION_LENGTH + " символов");
             }
         }
         if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
@@ -47,7 +47,7 @@ public class FilmController {
         }
         if (film.getDuration() < 0) {
             LOG.warn("Film duration is negative");
-            throw new ValidationException("Длительность фильма не может быть отрицательной");
+            throw new ValidationException("Продолжительность фильма должна быть положительным числом");
         }
     }
 
