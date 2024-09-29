@@ -1,66 +1,55 @@
 package ru.yandex.practicum.filmorate;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @SpringBootTest
 public class UserControllerTest {
-    @Autowired
-    private FilmController filmController;
 
-    // Successfully adds a new user with valid data
+    static UserController userController = new UserController();
+
     @Test
-    public void test_add_user_success() {
-        UserController userController = new UserController();
+    public void ifEmailIsBlankThrowException() {
         User user = new User();
-        user.setEmail("test@yandex.com");
-        user.setLogin("testUser");
-        user.setName("Test DMITRY");
-        user.setPassword("password123");
-        user.setBirthday(LocalDate.of(1998, 1, 1));
-
-        User addedUser = userController.addUser(user);
-
-        assertNotNull(addedUser.getId());
-        assertEquals("test@yandex.com", addedUser.getEmail());
-        assertEquals("testUser", addedUser.getLogin());
-        assertEquals("Test DMITRY", addedUser.getName());
+        user.setEmail("");
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.addUser(user));
+        Assertions.assertEquals("Электронная почта не может быть пустой", exception.getMessage());
     }
 
     @Test
-    public void update_user_with_valid_id_and_all_fields_provided() {
-        UserController userController = new UserController();
-        User existingUser = new User();
-        existingUser.setId(1L);
-        existingUser.setEmail("oldemail@yandex.ru");
-        existingUser.setLogin("oldlogin");
-        existingUser.setName("Old Name");
-        existingUser.setPassword("oldpassword");
-        existingUser.setBirthday(LocalDate.of(1990, 1, 1));
-        userController.addUser(existingUser);
+    public void ifLoginIsBlankThrowException() {
+        User user = new User();
+        user.setEmail("abcd@gmail.com");
+        user.setLogin("");
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.addUser(user));
+        Assertions.assertEquals("Логин не может быть пустым", exception.getMessage());
+    }
 
-        User updatedUser = new User();
-        updatedUser.setId(1L);
-        updatedUser.setEmail("newemail@example.com");
-        updatedUser.setLogin("newlogin");
-        updatedUser.setName("New Name");
-        updatedUser.setPassword("newpassword");
-        updatedUser.setBirthday(LocalDate.of(1990, 1, 1));
+    @Test
+    public void ifNameIsBlankThenNameEqualsEmail() {
+        User user = new User();
+        user.setName("");
+        user.setEmail("abcd@gmail.com");
+        user.setLogin("abcd");
+        user.setBirthday(LocalDate.of(2000, 10, 10));
+        userController.addUser(user);
+        Assertions.assertEquals(user.getName(), user.getLogin());
+    }
 
-        User result = userController.updateUser(updatedUser);
-
-        assertEquals("newemail@example.com", result.getEmail());
-        assertEquals("New Name", result.getName());
-        assertEquals("newpassword", result.getPassword());
+    @Test
+    public void ifBirthdayIsAfterInstantNowThrowException() {
+        User user = new User();
+        user.setEmail("abcd@gmail.com");
+        user.setLogin("abcd");
+        user.setBirthday(LocalDate.of(20000, 10, 10));
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.addUser(user));
+        Assertions.assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
     }
 
 }

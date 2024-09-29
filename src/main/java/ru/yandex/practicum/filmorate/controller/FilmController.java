@@ -20,7 +20,7 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final Map<Long, Film> films = new HashMap<>();
     private final AtomicLong idCounter = new AtomicLong();
-    private static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1895, 12, 28);
+    private static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1985, 12, 28);
 
     @GetMapping
     public List<Film> getFilms() {
@@ -62,14 +62,14 @@ public class FilmController {
             throw new ValidationException("Название фильма не может быть пустым");
         }
         if (film.getDescription() != null && film.getDescription().length() > 200) {
-            log.error("Описание фильма не может превышать 200 символов");
+            log.error("Описание фильма не может быть больше 200 символов");
             throw new ValidationException("Описание фильма не может превышать 200 символов");
         }
         if (film.getReleaseDate().isBefore(CINEMA_BIRTHDAY)) {
             log.error("Ошибка валидации: дата выпуска фильма не может быть ранее 28 декабря 1895 г.");
-            throw new ValidationException("Дата выпуска не может быть ранее 28 декабря 1895 г.");
+            throw new ValidationException("Дата релиза фильма не может быть раньше 1895-12-28");
         }
-        if (film.getDuration().getSeconds() <= 0) {
+        if (film.getDuration() <= 0) {
             log.error("Продолжительность фильма должна быть положительным числом");
             throw new ValidationException("Продолжительность фильма должна быть положительным числом");
         }

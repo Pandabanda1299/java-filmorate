@@ -31,7 +31,7 @@ public class UserController {
     public User addUser(@RequestBody User user) {
         validateUser(user);
         if (users.values().stream().anyMatch(existingUser -> existingUser.getEmail().equals(user.getEmail()))) {
-            log.error("Адрес электронной почты {} уже используется", user.getEmail());
+            log.error("Адрес электронной почты  уже используется", user.getEmail());
             throw new DuplicatedDataException("Этот имейл уже используется");
         }
         user.setId(idCounter.incrementAndGet());
@@ -48,42 +48,36 @@ public class UserController {
         }
         User existingUser = users.get(user.getId());
         if (existingUser == null) {
-            log.error("Пользователь с идентификатором {} не найден", user.getId());
+            log.error("Пользователь с идентификатором  не найден", user.getId());
             throw new ConditionsNotMetException("Пользователь не найден");
         }
         validateUser(user);
         if (user.getEmail() != null && !user.getEmail().equals(existingUser.getEmail()) &&
                 users.values().stream().anyMatch(existing -> existing.getEmail().equals(user.getEmail()))) {
-            log.error("Адрес электронной почты {} уже используется", user.getEmail());
+            log.error("Адрес электронной почты уже используется", user.getEmail());
             throw new DuplicatedDataException("Этот имейл уже используется");
         }
         if (user.getEmail() != null) {
             existingUser.setEmail(user.getEmail());
         }
-        if (user.getName() != null) {
-            existingUser.setName(user.getName());
-        }
-        if (user.getPassword() != null) {
-            existingUser.setPassword(user.getPassword());
-        }
-        log.info("Пользователь с идентификатором {} обновлен.", user.getId());
+        log.info("Пользователь с идентификатором  обновлен.", user.getId());
         return existingUser;
     }
 
     private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
-            log.error("Неверный адрес электронной почты: {}", user.getEmail());
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
+            log.error("Неверный адрес электронной почты: ", user.getEmail());
+            throw new ValidationException("Электронная почта не может быть пустой");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
             log.error("Неверный логин: {}", user.getLogin());
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
+            throw new ValidationException("Логин не может быть пустым");
         }
         if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("Неверный день рождения: {}", user.getBirthday());
+            log.error("Неверный день рождения: ", user.getBirthday());
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
