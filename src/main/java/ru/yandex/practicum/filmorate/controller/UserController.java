@@ -15,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final HashMap<Long, User> users = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
-    private static Long id = 0L;
+    private Long id = 0L;
+    private final HashMap<Long, User> users = new HashMap<>();
 
     @GetMapping
     public List<User> getUsers() {
