@@ -1,0 +1,7 @@
+logging:
+  file:
+    name: my.log
+  level:
+    org:
+      zalando:
+        logbook: TRACE
