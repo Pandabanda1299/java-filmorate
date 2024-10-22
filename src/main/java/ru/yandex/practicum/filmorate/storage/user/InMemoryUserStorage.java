@@ -47,8 +47,6 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
-    @Override
-
     public User updateUser(@RequestBody User user) {
         if (user.getId() != 0) {
             if (users.containsKey(user.getId())) {
@@ -61,6 +59,7 @@ public class InMemoryUserStorage implements UserStorage {
         log.warn("User id is invalid");
         throw new NotFoundException("Пользователь с id " + user.getId() + " не найден");
     }
+
 
     private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
