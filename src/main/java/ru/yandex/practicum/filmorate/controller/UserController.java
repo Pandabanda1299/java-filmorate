@@ -45,6 +45,11 @@ import java.util.List;
             return userService.addFriend(userId, friendId);
         }
 
+        @GetMapping("/{userId}/friends")
+        public List<User> getFriends(@PathVariable(value = "userId") long userId) {
+            return userService.getFriends(userId);
+        }
+
         @DeleteMapping("/{userId}/friends/{friendId}")
         public User deleteFriend(@PathVariable(value = "userId") long userId,
                                        @PathVariable(value = "friendId") long friendId) {

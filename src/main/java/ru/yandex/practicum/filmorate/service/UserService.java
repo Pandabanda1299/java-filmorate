@@ -47,6 +47,13 @@ public class UserService {
 
     }
 
+    public List<User> getFriends(long userId) {
+        if (userStorage.getUserById(userId) == null) {
+            throw new NotFoundException("Юзер с таким id не найден " + userId);
+        }
+        return userStorage.getFriends(userId);
+    }
+
 
     private void checkUserAndFriend(long userId, long friendId) {
         if (userStorage.getUserById(userId) == null) {

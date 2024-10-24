@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -24,17 +23,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Long, Film> films = new HashMap<>();
 
 
-
     @Override
-    public  Film addFilm(@RequestBody Film film) {
+    public Film addFilm(@RequestBody Film film) {
         filmValidation(film);
         film.setId(++id);
-        film.setLike(new HashSet<>());
         films.put(film.getId(), film);
         log.info("Фильм добавлен");
         return film;
     }
-
 
 
     @Override

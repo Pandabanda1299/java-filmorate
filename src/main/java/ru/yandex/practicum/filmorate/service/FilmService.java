@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.Comparator;
 import java.util.List;
 //добавление популярных фильмов, добавление лайков и удаление.
 
@@ -35,15 +34,15 @@ public class FilmService {
         return film;
     }
 
-    public List<Film> popularFilm(String limit) {
-        int parsedLimit = Integer.parseInt(limit);
+    public List<Film> popularFilm(Integer limit) {
         return filmStorage.getFilms()
                 .stream()
-                .filter(f -> f.getLike().isEmpty())
-                .sorted(Comparator.comparingInt(o -> o.getLike().size()))
-                .limit(parsedLimit)
-                .toList()
-                .reversed();
+                .sorted(((film1, film2) ->
+                        Integer.compare(film2.getLike().size(),
+                                film1.getLike().size())))
+                .limit(limit)
+                .toList();
+
 
     }
 

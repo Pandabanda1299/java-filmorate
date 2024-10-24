@@ -53,7 +53,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") String limit) {
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer limit) {
         return filmService.popularFilm(limit);
     }
 }

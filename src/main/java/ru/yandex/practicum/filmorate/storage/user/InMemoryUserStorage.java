@@ -22,6 +22,12 @@ public class InMemoryUserStorage implements UserStorage {
     private long id = 0L;
     private final HashMap<Long, User> users = new HashMap<>();
 
+    public List<User> getFriends(long userId) {
+        return users.get(userId).getFriends().stream()
+                .map(this::getUserById)
+                .toList();
+    }
+
     @Override
     public User getUserById(long id) {
         if (!users.containsKey(id)) {

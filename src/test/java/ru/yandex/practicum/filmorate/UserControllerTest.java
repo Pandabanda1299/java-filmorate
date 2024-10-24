@@ -3,16 +3,17 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 
 @SpringBootTest
 public class UserControllerTest {
 
-    static UserController userController = new UserController();
+    static UserStorage userController = new InMemoryUserStorage();
 
     @Test
     public void ifEmailIsBlankThrowException() {
