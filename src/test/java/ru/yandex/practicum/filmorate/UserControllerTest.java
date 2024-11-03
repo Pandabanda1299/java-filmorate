@@ -5,21 +5,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 
 @SpringBootTest
 public class UserControllerTest {
 
-    static UserStorage userController = new InMemoryUserStorage();
+    static UserService userController = new UserService(new InMemoryUserStorage());
 
     @Test
     public void ifEmailIsBlankThrowException() {
         User user = new User();
         user.setEmail("");
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.addUser(user));
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
         Assertions.assertEquals("Электронная почта не может быть пустой", exception.getMessage());
     }
 
@@ -28,7 +28,7 @@ public class UserControllerTest {
         User user = new User();
         user.setEmail("abcd@gmail.com");
         user.setLogin("");
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.addUser(user));
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
         Assertions.assertEquals("Логин не может быть пустым", exception.getMessage());
     }
 
@@ -39,7 +39,7 @@ public class UserControllerTest {
         user.setEmail("abcd@gmail.com");
         user.setLogin("abcd");
         user.setBirthday(LocalDate.of(2000, 10, 10));
-        userController.addUser(user);
+        userController.createUser(user);
         Assertions.assertEquals(user.getName(), user.getLogin());
     }
 
@@ -49,7 +49,7 @@ public class UserControllerTest {
         user.setEmail("abcd@gmail.com");
         user.setLogin("abcd");
         user.setBirthday(LocalDate.of(20000, 10, 10));
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.addUser(user));
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
         Assertions.assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
     }
 

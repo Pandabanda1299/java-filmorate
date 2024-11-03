@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +43,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addUser(@RequestBody User user) {
-        validateUser(user);
         user.setId(++id);
         user.setFriends(new HashSet<>());
         users.put(user.getId(), user);
@@ -56,7 +53,6 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(@RequestBody User user) {
         if (user.getId() != 0) {
             if (users.containsKey(user.getId())) {
-                validateUser(user);
                 users.put(user.getId(), user);
                 log.info("Пользователь обновлен: {}", user);
                 return user;
@@ -64,24 +60,5 @@ public class InMemoryUserStorage implements UserStorage {
         }
         log.warn("User id is invalid");
         throw new NotFoundException("Пользователь с id " + user.getId() + " не найден");
-    }
-
-
-    private void validateUser(User user) {
-        if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
-            log.error("Неверный адрес электронной почты: ", user.getEmail());
-            throw new ValidationException("Электронная почта не может быть пустой");
-        }
-        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
-            log.error("Неверный логин: {}", user.getLogin());
-            throw new ValidationException("Логин не может быть пустым");
-        }
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("Неверный день рождения: ", user.getBirthday());
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }
     }
 }

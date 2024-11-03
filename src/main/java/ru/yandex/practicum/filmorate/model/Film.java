@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -9,9 +10,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Data
-
 public class Film {
     private long id; //целочисленный идентификатор
     @NotBlank(message = "Поле с названием фильма не должно быть пустым")
@@ -21,5 +20,18 @@ public class Film {
     private LocalDate releaseDate; //дата релиза
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     private Integer duration; //продолжительность фильма
-    private final  Set<Long> like  = new HashSet<>();
+    @JsonIgnore
+    private Set<Long> likes = new HashSet<>();
+    @JsonIgnore
+    private long rate = 0;
+
+    public void addLike(long userId) {
+        likes.add(userId);
+        rate = likes.size();
+    }
+
+    public void removeLike(long userId) {
+        likes.remove(userId);
+        rate = likes.size();
+    }
 }
