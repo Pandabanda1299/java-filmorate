@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dto.filmDto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.filmorate.dto.GenreDto;
 import ru.yandex.practicum.filmorate.dto.MpaDto;
 
@@ -10,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@RequiredArgsConstructor
 public class NewFilmRequest {
-    private Long id;
+    private int id;
     @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
 
@@ -25,7 +27,7 @@ public class NewFilmRequest {
     private Integer rate;
 
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
-    private Long duration;
+    private Integer duration;
 
     private MpaDto mpa;
     private List<GenreDto> genres = new ArrayList<>();

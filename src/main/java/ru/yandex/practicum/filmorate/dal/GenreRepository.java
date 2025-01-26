@@ -66,7 +66,7 @@ public class GenreRepository extends BaseRepository<Genre> {
 
     private Genre makeGenre(ResultSet rs) throws SQLException {
         Genre genre = new Genre();
-        genre.setId(rs.getLong("genre_id"));
+        genre.setId(rs.getInt("genre_id"));
         genre.setName(rs.getString("name"));
         return genre;
     }

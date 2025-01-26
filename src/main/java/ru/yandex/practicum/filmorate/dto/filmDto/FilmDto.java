@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.dto.filmDto;
 
 import java.time.LocalDate;
 
-public class filmDto {
+public class FilmDto {
     private int id;
     private String name;
     private String description;

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MpaDto {
-    private Long id;
+    private Integer id;
     private String name;
 }

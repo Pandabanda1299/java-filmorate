@@ -8,7 +8,7 @@ public class LikeRepository {
 
     private static final String ADD_LIKE = "INSERT INTO likes (film_id, user_id) VALUES (?, ?)";
     private static final String REMOVE_LIKE = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
-    private static final String UPDATE_RATE = "UPDATE films f SET rate = (SELECT COUNT(l.user_id) FROM likes l " +
+    private static final String UPDATE_RATE = "UPDATE films f SET = (SELECT COUNT(l.user_id) FROM likes l " +
             "WHERE l.film_id = f.film_id) WHERE film_id = ?";
 
     private final JdbcTemplate jdbcTemplate;

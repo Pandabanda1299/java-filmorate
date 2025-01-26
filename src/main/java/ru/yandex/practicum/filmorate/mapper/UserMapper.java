@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.mapper;
 import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.dto.user.NewUserRequest;
 
+import ru.yandex.practicum.filmorate.dto.userDto.UpdateUserRequest;
 import ru.yandex.practicum.filmorate.dto.userDto.UserDto;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -24,7 +25,7 @@ public final class UserMapper {
         userDto.setEmail(user.getEmail());
         userDto.setLogin(user.getLogin());
         userDto.setName(user.getName());
-        userDto.setBirthday(user.getBirthday().toString());
+        userDto.setBirthday(user.getBirthday());
         return userDto;
     }
 

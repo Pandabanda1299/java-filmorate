@@ -1,20 +1,21 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.filmorate.dto.film.FilmDto;
-import ru.yandex.practicum.filmorate.dto.film.NewFilmRequest;
+import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.filmorate.dto.GenreDto;
+import ru.yandex.practicum.filmorate.dto.film.FilmDto;
+import ru.yandex.practicum.filmorate.dto.filmDto.NewFilmRequest;
+import ru.yandex.practicum.filmorate.dto.filmDto.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public final class FilmMapper {
-
     public static Film mapToFilm(NewFilmRequest newFilmRequest, Mpa mpa, List<Genre> genres) {
         Film film = new Film();
         film.setName(newFilmRequest.getName());
@@ -28,24 +29,24 @@ public final class FilmMapper {
     }
 
     public static FilmDto mapToFilmDto(Film film) {
-        FilmDto filmDto = new FilmDto();
-        filmDto.setId(film.getId());
-        filmDto.setName(film.getName());
-        filmDto.setDescription(film.getDescription());
-        filmDto.setReleaseDate(film.getReleaseDate());
-        filmDto.setDuration(film.getDuration());
+
+        FilmDto.setId(film.getId());
+        FilmDto.setName(film.getName());
+        FilmDto.setDescription(film.getDescription());
+        FilmDto.setReleaseDate(film.getReleaseDate());
+        FilmDto.setDuration(film.getDuration());
 
         Mpa mpa = film.getMpa();
-        filmDto.setMpa(MpaMapper.mapToMpaDto(mpa));
+        FilmDto.setMpa(GenreMapper.mapToMpaDto(mpa));
 
         if (Objects.nonNull(film.getGenres())) {
             List<GenreDto> genreDtos = film.getGenres()
                     .stream()
                     .map(GenreMapper::toGenreDto)
                     .collect(Collectors.toList());
-            filmDto.setGenres(genreDtos);
+            FilmDto.setGenres(genreDtos);
         }
-        return filmDto;
+        return FilmDto;
     }
 
     public static Film updateFilm(Film film, NewFilmRequest newFilmRequest, Mpa mpa, List<Genre> genres) {

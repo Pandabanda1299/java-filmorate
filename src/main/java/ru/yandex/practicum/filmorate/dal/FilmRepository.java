@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dto.GenreDto;
 
+import ru.yandex.practicum.filmorate.dto.filmDto.NewFilmRequest;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -18,15 +19,18 @@ public class FilmRepository extends BaseRepository<Film> {
     private static final String FIND_ALL_FILMS = "SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name " +
             "FROM films f " +
             "JOIN mpa m ON f.mpa_id = m.mpa_id";
+
     private static final String FIND_FILM_BY_ID = "SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name " +
             "FROM films f " +
             "JOIN mpa m ON f.mpa_id = m.mpa_id " +
             "WHERE f.film_id = ?";
+
     private static final String CREATE_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
     private static final String GET_POPULAR_FILMS = "SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name " +
             "FROM films f " +
             "JOIN mpa m ON f.mpa_id = m.mpa_id " +
             "ORDER BY f.rate DESC LIMIT ?";
+
     private static final String CREATE_FILM = "INSERT INTO films (" +
             "name, description, release_date, duration, mpa_id)" +
             " VALUES (?, ?, ?, ?, ?)";
@@ -61,7 +65,7 @@ public class FilmRepository extends BaseRepository<Film> {
     }
 
     public void update(NewFilmRequest film) {
-        String sqlQuery = "UPDATE films SET name = ?, description = ?, release_date = ?, " +
+        String sqlQuery = "UPDATE films SET name = ?, description = ?, RELEASEDATE = ?, " +
                 "duration = ?, RATE  = ?, mpa_id = ? WHERE film_id = ?";
         try {
             jdbc.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(),
@@ -73,8 +77,8 @@ public class FilmRepository extends BaseRepository<Film> {
     }
 
     private void saveGenres(NewFilmRequest film) {
-        final Long filmId = film.getId();
-        jdbc.update("DELETE FROM film_genres WHERE film_id = ?", filmId);
+        final Integer filmId = film.getId();
+        jdbc.update("DELETE FROM Genre WHERE Film.id = ?", filmId);
         final List<GenreDto> genres = film.getGenres();
         if (genres == null || genres.isEmpty()) {
             return;
