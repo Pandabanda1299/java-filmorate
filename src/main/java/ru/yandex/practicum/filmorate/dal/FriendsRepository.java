@@ -12,11 +12,11 @@ public class FriendsRepository {
 
     private static final String ADD_FRIEND = "INSERT INTO friends (user_id, FRIEND_USER_ID) VALUES (?, ?)";
     private static final String DELETE_FRIEND = "DELETE FROM friends WHERE user_id = ? AND FRIEND_USER_ID = ?";
-    private static final String GET_FRIENDS = "SELECT u.* FROM users u JOIN friends f ON u.userId = f.FRIEND_USER_ID" +
+    private static final String GET_FRIENDS = "SELECT u.* FROM users u JOIN friends f ON u.ID = f.FRIEND_USER_ID" +
             " WHERE f.user_id = ?";
     private static final String GET_COMMON_FRIENDS = "SELECT u.* FROM users u " +
-            "JOIN friends f1 ON u.user_id = f1.FRIEND_USER_ID " +
-            "JOIN friends f2 ON u.user_id = f2.FRIEND_USER_ID " +
+            "JOIN friends f1 ON u.ID= f1.FRIEND_USER_ID " +
+            "JOIN friends f2 ON u.ID = f2.FRIEND_USER_ID " +
             "WHERE f1.user_id = ? AND f2.user_id = ?";
 
     private final JdbcTemplate jdbcTemplate;

@@ -8,6 +8,15 @@ CREATE TABLE IF NOT EXISTS users
     birthday DATE         NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS likes
+(
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    film_id INT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE,
+    FOREIGN KEY (film_id) REFERENCES films (id) ON DELETE CASCADE
+);
+
 -- Создание таблицы status
 CREATE TABLE IF NOT EXISTS status
 (

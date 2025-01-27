@@ -1,16 +1,16 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.filmorate.dto.MpaDto;
-import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.dto.GenreDto;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class GenreMapper {
 
-    public static MpaDto mapToMpaDto(Mpa mpa) {
-        MpaDto mpaDto = new MpaDto();
-        mpaDto.setId(mpa.getId());
-        mpaDto.setName(mpa.getName());
-        return mpaDto;
+    public static GenreDto mapToMpaDto(Genre genre) {
+        GenreDto genreDto = new GenreDto();
+        genreDto.setId(genre.getId());
+        genreDto.setName(genre.getName());
+        return genreDto;
     }
 }

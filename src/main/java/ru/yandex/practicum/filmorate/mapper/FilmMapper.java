@@ -1,11 +1,9 @@
 package ru.yandex.practicum.filmorate.mapper;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.filmorate.dto.GenreDto;
-import ru.yandex.practicum.filmorate.dto.film.FilmDto;
-import ru.yandex.practicum.filmorate.dto.filmDto.NewFilmRequest;
 import ru.yandex.practicum.filmorate.dto.filmDto.FilmDto;
+import ru.yandex.practicum.filmorate.dto.filmDto.NewFilmRequest;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -29,24 +27,24 @@ public final class FilmMapper {
     }
 
     public static FilmDto mapToFilmDto(Film film) {
-
-        FilmDto.setId(film.getId());
-        FilmDto.setName(film.getName());
-        FilmDto.setDescription(film.getDescription());
-        FilmDto.setReleaseDate(film.getReleaseDate());
-        FilmDto.setDuration(film.getDuration());
+        FilmDto filmDto = new FilmDto();
+        filmDto.setId(film.getId());
+        filmDto.setName(film.getName());
+        filmDto.setDescription(film.getDescription());
+        filmDto.setReleaseDate(film.getReleaseDate());
+        filmDto.setDuration(film.getDuration());
 
         Mpa mpa = film.getMpa();
-        FilmDto.setMpa(GenreMapper.mapToMpaDto(mpa));
+        filmDto.setRating(MpaMapper.mapToMpaDto(mpa));
 
         if (Objects.nonNull(film.getGenres())) {
             List<GenreDto> genreDtos = film.getGenres()
                     .stream()
-                    .map(GenreMapper::toGenreDto)
+                    .map(GenreMapper::mapToMpaDto)
                     .collect(Collectors.toList());
-            FilmDto.setGenres(genreDtos);
+            filmDto.setGenreList(genreDtos);
         }
-        return FilmDto;
+        return filmDto;
     }
 
     public static Film updateFilm(Film film, NewFilmRequest newFilmRequest, Mpa mpa, List<Genre> genres) {

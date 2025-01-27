@@ -3,17 +3,17 @@ package ru.yandex.practicum.filmorate.dto.userDto;
 import java.time.LocalDate;
 
 public class UserDto {
-    private int id;
+    private long id;
     private String name;
     private String email;
     private String login;
     private LocalDate birthday;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

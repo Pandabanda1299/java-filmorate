@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 @Repository
 public class GenreRepository extends BaseRepository<Genre> {
 
-    private static final String FIND_ALL_GENRES = "SELECT * FROM genres ORDER BY genre_id";
+    private static final String FIND_ALL_GENRES = "SELECT * FROM GENRE ORDER BY ID";
     private static final String FIND_GENRE_BY_ID = "SELECT * FROM genres WHERE genre_id = ?";
-    private static final String FIND_GENRES_FOR_FILM = "SELECT g.* FROM genres g " +
-            "JOIN film_genres fg ON g.genre_id = fg.genre_id " +
+    private static final String FIND_GENRES_FOR_FILM = "SELECT g.* FROM GENRE g " +
+            "JOIN FILM_GENRE fg ON g.ID = fg.genre_id " +
             "WHERE fg.film_id = ?";
-    private static final String UPDATE_GENRE = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
-    private static final String DELETE = "DELETE FROM film_genres WHERE film_id = ?";
+    private static final String UPDATE_GENRE = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?, ?)";
+    private static final String DELETE = "DELETE FROM FILM_GENRE WHERE film_id = ?";
 
     public GenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper, Genre.class);
@@ -65,9 +65,10 @@ public class GenreRepository extends BaseRepository<Genre> {
     }
 
     private Genre makeGenre(ResultSet rs) throws SQLException {
-        Genre genre = new Genre();
-        genre.setId(rs.getInt("genre_id"));
-        genre.setName(rs.getString("name"));
-        return genre;
+        return Genre.builder()
+                .id(rs.getInt("id"))
+                .name(rs.getString("name"))
+                .build();
+
     }
 }

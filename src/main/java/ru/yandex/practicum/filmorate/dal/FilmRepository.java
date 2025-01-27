@@ -16,20 +16,20 @@ import java.util.*;
 
 @Repository
 public class FilmRepository extends BaseRepository<Film> {
-    private static final String FIND_ALL_FILMS = "SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name " +
+    private static final String FIND_ALL_FILMS = "SELECT f.*, r.ID AS mpa_id, r.name AS mpa_name " +
             "FROM films f " +
-            "JOIN mpa m ON f.mpa_id = m.mpa_id";
+            "JOIN RATING r ON f.RATING_ID = r.ID";
 
     private static final String FIND_FILM_BY_ID = "SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name " +
             "FROM films f " +
             "JOIN mpa m ON f.mpa_id = m.mpa_id " +
             "WHERE f.film_id = ?";
 
-    private static final String CREATE_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
-    private static final String GET_POPULAR_FILMS = "SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name " +
+    private static final String CREATE_FILM_GENRES = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?, ?)";
+    private static final String GET_POPULAR_FILMS = "SELECT f.*, r.ID AS mpa_id, r.name AS mpa_name " +
             "FROM films f " +
-            "JOIN mpa m ON f.mpa_id = m.mpa_id " +
-            "ORDER BY f.rate DESC LIMIT ?";
+            "JOIN RATING r ON f.RATING_ID = r.ID " +
+            "ORDER BY f.RATING_ID DESC LIMIT ?";
 
     private static final String CREATE_FILM = "INSERT INTO films (" +
             "name, description, release_date, duration, mpa_id)" +
@@ -66,7 +66,7 @@ public class FilmRepository extends BaseRepository<Film> {
 
     public void update(NewFilmRequest film) {
         String sqlQuery = "UPDATE films SET name = ?, description = ?, RELEASEDATE = ?, " +
-                "duration = ?, RATE  = ?, mpa_id = ? WHERE film_id = ?";
+                "duration = ?, RATING_ID = ? WHERE ID = ?";
         try {
             jdbc.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(),
                     film.getDuration(), film.getRate(), film.getMpa().getId(), film.getId());
@@ -78,7 +78,7 @@ public class FilmRepository extends BaseRepository<Film> {
 
     private void saveGenres(NewFilmRequest film) {
         final Integer filmId = film.getId();
-        jdbc.update("DELETE FROM Genre WHERE Film.id = ?", filmId);
+        jdbc.update("DELETE FROM FILM_GENRE WHERE FILM_ID = ?", filmId);
         final List<GenreDto> genres = film.getGenres();
         if (genres == null || genres.isEmpty()) {
             return;

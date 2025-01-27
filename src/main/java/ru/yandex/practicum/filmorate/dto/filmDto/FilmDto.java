@@ -1,20 +1,35 @@
 package ru.yandex.practicum.filmorate.dto.filmDto;
 
+import ru.yandex.practicum.filmorate.dto.GenreDto;
+import ru.yandex.practicum.filmorate.dto.MpaDto;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
+
 import java.time.LocalDate;
+import java.util.List;
 
 public class FilmDto {
-    private int id;
+    private long id;
     private String name;
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private int ratingId;
+    private MpaDto rating;
+    private List<GenreDto> genreList;
 
-    public int getId() {
+    public List<GenreDto> getGenreList() {
+        return genreList;
+    }
+
+    public void setGenreList(List<GenreDto> genreList) {
+        this.genreList = genreList;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -50,11 +65,11 @@ public class FilmDto {
         this.duration = duration;
     }
 
-    public int getRatingId() {
-        return ratingId;
+    public MpaDto getRatingId() {
+        return rating;
     }
 
-    public void setRatingId(int ratingId) {
-        this.ratingId = ratingId;
+    public void setRating(MpaDto rating) {
+        this.rating = rating;
     }
 }
