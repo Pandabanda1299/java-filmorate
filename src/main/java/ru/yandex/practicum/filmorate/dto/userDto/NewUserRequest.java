@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dto.user;
+package ru.yandex.practicum.filmorate.dto.userDto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

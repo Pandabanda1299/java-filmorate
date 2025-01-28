@@ -11,12 +11,17 @@ VALUES ('Pending'),
        ('Rejected');
 
 -- Заполнение таблицы rating
-INSERT INTO rating (name)
-VALUES ('G'),
-       ('PG'),
-       ('PG-13'),
-       ('R'),
-       ('NC-17');
+MERGE INTO rating AS r
+    USING (VALUES
+               ('G'),
+               ('PG'),
+               ('PG-13'),
+               ('R'),
+               ('NC-17')
+        ) AS source(name)
+ON r.name = source.name
+WHEN NOT MATCHED THEN
+    INSERT (name) VALUES (source.name);
 
 -- Заполнение таблицы genre
 INSERT INTO genre (name)

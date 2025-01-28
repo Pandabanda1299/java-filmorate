@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class GenreRepository extends BaseRepository<Genre> {
 
     private static final String FIND_ALL_GENRES = "SELECT * FROM GENRE ORDER BY ID";
-    private static final String FIND_GENRE_BY_ID = "SELECT * FROM genres WHERE genre_id = ?";
+    private static final String FIND_GENRE_BY_ID = "SELECT * FROM GENRE WHERE genre_id = ?";
     private static final String FIND_GENRES_FOR_FILM = "SELECT g.* FROM GENRE g " +
             "JOIN FILM_GENRE fg ON g.ID = fg.genre_id " +
             "WHERE fg.film_id = ?";
@@ -64,11 +64,17 @@ public class GenreRepository extends BaseRepository<Genre> {
         }, films.stream().map(Film::getId).toArray());
     }
 
+    //    private Genre makeGenre(ResultSet rs) throws SQLException {
+//        return Genre.builder()
+//                .id(rs.getInt("id"))
+//                .name(rs.getString("name"))
+//                .build();
+
     private Genre makeGenre(ResultSet rs) throws SQLException {
         return Genre.builder()
-                .id(rs.getInt("id"))
+                .id(rs.getInt("genre_id"))
                 .name(rs.getString("name"))
                 .build();
-
     }
+
 }
