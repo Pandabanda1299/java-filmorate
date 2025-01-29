@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -21,23 +23,44 @@ public class FriendsRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<User> mapper;
+    private final UserRepository userRepository;
 
-    public FriendsRepository(JdbcTemplate jdbcTemplate, RowMapper<User> mapper) {
+    public FriendsRepository(JdbcTemplate jdbcTemplate, RowMapper<User> mapper, UserRepository userRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
-    public void addFriend(long userId, long friendId) {
+    public User addFriend(long userId, long friendId) {
+        User user = userRepository.findById(userId);
+        User user2 = userRepository.findById(friendId);
         jdbcTemplate.update(ADD_FRIEND, userId, friendId);
+//        List<User> friends = getFriends(userId);
+        user.getFriends().add(user2);
+        return user;
     }
 
     public void deleteFriend(long userId, long friendId) {
         jdbcTemplate.update(DELETE_FRIEND, userId, friendId);
     }
 
-    public List<User> getFriends(long userId) {
-        return jdbcTemplate.query(GET_FRIENDS, mapper, userId);
+    public List<User> getFriends(Long userId) {
+        String sqlQueryUser2 = "SELECT FRIEND_USER_ID " +
+                "FROM FRIENDS WHERE USER_ID = ?";
+
+        List<Long> friendsId = jdbcTemplate.queryForList(sqlQueryUser2, Long.class, userId);
+        List<User> allUsers = userRepository.findAll().stream().toList();
+        List<User> result = new ArrayList<>();
+
+        for (User user : allUsers) {
+            if (friendsId.contains(user.getId())) {
+                result.add(user);
+            }
+        }
+
+        return result;
     }
+
 
     public List<User> getCommonFriends(long userId, long otherUserId) {
         return jdbcTemplate.query(GET_COMMON_FRIENDS, mapper, userId, otherUserId);

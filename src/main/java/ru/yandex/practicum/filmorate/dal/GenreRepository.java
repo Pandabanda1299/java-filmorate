@@ -64,12 +64,6 @@ public class GenreRepository extends BaseRepository<Genre> {
         }, films.stream().map(Film::getId).toArray());
     }
 
-    //    private Genre makeGenre(ResultSet rs) throws SQLException {
-//        return Genre.builder()
-//                .id(rs.getInt("id"))
-//                .name(rs.getString("name"))
-//                .build();
-
     private Genre makeGenre(ResultSet rs) throws SQLException {
         return Genre.builder()
                 .id(rs.getInt("genre_id"))

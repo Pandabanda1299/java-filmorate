@@ -3,10 +3,11 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.FriendsRepository;
+import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,31 +18,29 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class UserService {
-    private final InMemoryUserStorage userStorage;
+//    private final InMemoryUserStorage userStorage;
+    private final UserRepository userRepository;
+    private final FriendsRepository friendsRepository;
 
     public User createUser(User user) {
         validateUser(user);
-        return userStorage.addUser(user);
+        return userRepository.create(user);
     }
 
     public User updateUser(User user) {
         validateUser(user);
-        return userStorage.updateUser(user);
+        return userRepository.update(user);
     }
 
     public User addFriend(long userId, long friendId) {
         checkUserAndFriend(userId, friendId);
-        User friend = userStorage.getUserById(friendId);
-        User user = userStorage.getUserById(userId);
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
-        return user;
+        return friendsRepository.addFriend(userId, friendId);
     }
 
     public User removeFriend(long userId, long friendId) {
         checkUserAndFriend(userId, friendId);
-        User friend = userStorage.getUserById(friendId);
-        User user = userStorage.getUserById(userId);
+        User friend = userRepository.findById(friendId);
+        User user = userRepository.findById(userId);
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
         return user;
@@ -49,28 +48,31 @@ public class UserService {
 
     public List<User> commonFriend(long userId, long friendId) {
         checkUserAndFriend(userId, friendId);
-        User friend = userStorage.getUserById(friendId);
-        User user = userStorage.getUserById(userId);
-        return user.getFriends()
-                .stream().filter(f -> friend.getFriends().contains(f))
-                .map(userStorage::getUserById)
-                .toList();
+        return friendsRepository.getCommonFriends(userId, friendId);
 
     }
 
     public List<User> getFriends(long userId) {
-        if (userStorage.getUserById(userId) == null) {
+        if (userRepository.findById(userId) == null) {
             throw new NotFoundException("Юзер с таким id не найден " + userId);
         }
-        return userStorage.getFriends(userId);
+        return friendsRepository.getFriends(userId);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User findById(long id) {
+        return userRepository.findById(id);
     }
 
 
     private void checkUserAndFriend(long userId, long friendId) {
-        if (userStorage.getUserById(userId) == null) {
+        if (userRepository.findById(userId) == null) {
             throw new NotFoundException("Юзер с таким id не найден " + userId);
         }
-        if (userStorage.getUserById(friendId) == null) {
+        if (userRepository.findById(friendId) == null) {
             throw new NotFoundException("Друга с таким id не существует " + friendId);
         }
     }
