@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class UserService {
-//    private final InMemoryUserStorage userStorage;
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
 
@@ -39,11 +38,7 @@ public class UserService {
 
     public User removeFriend(long userId, long friendId) {
         checkUserAndFriend(userId, friendId);
-        User friend = userRepository.findById(friendId);
-        User user = userRepository.findById(userId);
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
-        return user;
+        return friendsRepository.deleteFriend(userId, friendId);
     }
 
     public List<User> commonFriend(long userId, long friendId) {

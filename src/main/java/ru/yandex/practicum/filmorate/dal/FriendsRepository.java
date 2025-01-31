@@ -35,13 +35,13 @@ public class FriendsRepository {
         User user = userRepository.findById(userId);
         User user2 = userRepository.findById(friendId);
         jdbcTemplate.update(ADD_FRIEND, userId, friendId);
-//        List<User> friends = getFriends(userId);
         user.getFriends().add(user2);
         return user;
     }
 
-    public void deleteFriend(long userId, long friendId) {
+    public User deleteFriend(long userId, long friendId) {
         jdbcTemplate.update(DELETE_FRIEND, userId, friendId);
+        return userRepository.findById(userId);
     }
 
     public List<User> getFriends(Long userId) {

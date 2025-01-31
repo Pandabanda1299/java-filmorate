@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class Mpa {
-    private Integer id;
+    private Long id;
     private String name;
 }

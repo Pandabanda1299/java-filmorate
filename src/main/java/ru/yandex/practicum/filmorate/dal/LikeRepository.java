@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.dal;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class LikeRepository {
 
@@ -11,7 +13,9 @@ public class LikeRepository {
     private static final String UPDATE_RATE = "UPDATE films f SET = (SELECT COUNT(l.user_id) FROM likes l " +
             "WHERE l.film_id = f.film_id) WHERE film_id = ?";
 
+
     private final JdbcTemplate jdbcTemplate;
+
 
     public LikeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -30,4 +34,5 @@ public class LikeRepository {
     private void updateRate(long filmId) {
         jdbcTemplate.update(UPDATE_RATE, filmId);
     }
+
 }

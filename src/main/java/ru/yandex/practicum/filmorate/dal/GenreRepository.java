@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 public class GenreRepository extends BaseRepository<Genre> {
 
     private static final String FIND_ALL_GENRES = "SELECT * FROM GENRE ORDER BY ID";
-    private static final String FIND_GENRE_BY_ID = "SELECT * FROM GENRE WHERE genre_id = ?";
+    private static final String FIND_GENRE_BY_ID = "SELECT * FROM GENRE WHERE id = ?";
     private static final String FIND_GENRES_FOR_FILM = "SELECT g.* FROM GENRE g " +
             "JOIN FILM_GENRE fg ON g.ID = fg.genre_id " +
             "WHERE fg.film_id = ?";
-    private static final String UPDATE_GENRE = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?, ?)";
+    private static final String UPDATE_GENRE = "INSERT INTO FILM_GENRE (film_id, id) VALUES (?, ?)";
     private static final String DELETE = "DELETE FROM FILM_GENRE WHERE film_id = ?";
 
     public GenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
@@ -66,7 +66,7 @@ public class GenreRepository extends BaseRepository<Genre> {
 
     private Genre makeGenre(ResultSet rs) throws SQLException {
         return Genre.builder()
-                .id(rs.getInt("genre_id"))
+                .id(rs.getLong("id"))
                 .name(rs.getString("name"))
                 .build();
     }

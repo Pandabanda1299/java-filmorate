@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 @Repository
 public class MpaRepository extends BaseRepository<Mpa> {
 
-    private static final String FIND_ALL_MPA = "SELECT * FROM RATING ORDER BY RATING.ID";
-    private static final String FIND_MPA_BY_ID = "SELECT * FROM RATING WHERE RATING.ID = ?";
+    private static final String FIND_ALL_MPA = "SELECT * FROM RATING ORDER BY ID";
+    private static final String FIND_MPA_BY_ID = "SELECT * FROM RATING WHERE ID = ?";
 
     public MpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper, Mpa.class);
