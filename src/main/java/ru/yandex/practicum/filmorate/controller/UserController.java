@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
-    //    private final InMemoryUserStorage inMemoryUserStorage;
+
     private final UserService userService;
 
     @PostMapping

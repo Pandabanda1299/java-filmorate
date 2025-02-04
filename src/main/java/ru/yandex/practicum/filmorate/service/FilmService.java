@@ -27,8 +27,16 @@ public class FilmService {
     private final GenreService genreService;
     private final LikeRepository likeRepository;
 
-    public void addLike(long filmId, long userId) {
-        likeRepository.addLike(filmId, userId);
+    public Long addLike(long filmId, long userId) {
+     return  likeRepository.addLike(filmId, userId);
+    }
+
+    public Long removeLike(long filmId, long userId) {
+        return likeRepository.removeLike(filmId, userId);
+    }
+
+    public List <Film> getPopularFilms(int count) {
+      return filmRepository.getPopularFilms(count);
     }
 
     public Film addFilm(Film film) {
