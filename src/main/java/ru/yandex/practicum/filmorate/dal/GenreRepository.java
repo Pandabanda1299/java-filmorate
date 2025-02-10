@@ -3,15 +3,14 @@ package ru.yandex.practicum.filmorate.dal;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dal.mappers.GenreRowMapper;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -37,8 +36,18 @@ public class GenreRepository extends BaseRepository<Genre> {
         return findOne(FIND_GENRE_BY_ID, id);
     }
 
-    public List<Genre> getGenresForFilm(Long filmId) {
-        return jdbc.query(FIND_GENRES_FOR_FILM, mapper, filmId);
+
+    public List<Genre> getGenresForFilm(long filmId) {
+        String sql = "SELECT g.* FROM GENRE g " +
+                "JOIN FILM_GENRE fg ON g.ID = fg.genre_id " +
+                "WHERE fg.film_id = ?";
+
+        // Если жанры отсутствуют, вернём пустой список
+        try {
+            return jdbc.query(sql, new GenreRowMapper(), filmId);
+        } catch (Exception e) {
+            throw new ValidationException("Отсуствует жанр "); // Возвращаем пустой список, если данных нет
+        }
     }
 
     public void update(long filmId, List<Long> genreIds) {

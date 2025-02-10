@@ -41,15 +41,11 @@ public class FilmRowMapper implements RowMapper<Film> {
         Long mpaId = rs.getLong("rating_id");
         Mpa mpa = mpaRepository.getMpaById(mpaId, () -> new NotFoundException("MPA с id " + mpaId + " не найден"));
         film.setMpa(mpa);
-        log.info("СЕТ ЖАНРОВ НАЧАЛО");
         List<Genre> genresForFilm = genreRepository.getGenresForFilm(film.getId());
         film.setGenres(genresForFilm);
-        log.info("СЕТ ЖАНРОВ КОНЕЦ");
-        log.info("СЕТ ЛАЙКОВ НАЧАЛО");
         Set<Integer> likes = likeRepository.getLikes(film.getId());
         film.setLikes(likes);
-        log.info("СЕТ ЛАЙКОВ КОНЕЦ");
-        log.info("КОНЕЦ FilmRowMapper mapRow");
+
         return film;
     }
 }

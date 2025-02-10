@@ -22,7 +22,6 @@ public class FilmController {
 
 
     private final FilmService filmService;
-    private final LikeRepository likeRepository;
 
     @PutMapping ("/{filmId}/like/{userId}")
     public void addLike(@PathVariable() Long filmId, @PathVariable Long userId) {
@@ -57,7 +56,7 @@ public class FilmController {
 
     @GetMapping("/{filmId}")
     public Film getFilm(@PathVariable(value = "filmId") long filmId) {
-        log.info("Получение фильма по id: {}");
+        log.info("Получение фильма по id: {}", filmId);
         return filmService.getFilmById(filmId);
     }
 

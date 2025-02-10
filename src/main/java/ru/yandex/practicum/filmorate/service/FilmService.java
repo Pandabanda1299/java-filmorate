@@ -42,9 +42,9 @@ public class FilmService {
     public Film addFilm(Film film) {
         filmValidation(film);
         mpaService.getMpaById(film.getMpa().getId());
-        for (Genre genre : film.getGenres()) {
-            genreService.getGenreById(genre.getId());
-        }
+//        for (Genre genre : film.getGenres()) {
+//            genreService.getGenreById(genre.getId());
+//        }
         return filmRepository.create(film);
     }
 
