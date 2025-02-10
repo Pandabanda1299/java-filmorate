@@ -10,7 +10,10 @@ import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -42,7 +45,6 @@ public class GenreRepository extends BaseRepository<Genre> {
                 "JOIN FILM_GENRE fg ON g.ID = fg.genre_id " +
                 "WHERE fg.film_id = ?";
 
-        // Если жанры отсутствуют, вернём пустой список
         try {
             return jdbc.query(sql, new GenreRowMapper(), filmId);
         } catch (Exception e) {

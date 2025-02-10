@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmRepository;
 import ru.yandex.practicum.filmorate.dal.LikeRepository;
 import ru.yandex.practicum.filmorate.dal.UserRepository;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,23 +26,20 @@ public class FilmService {
     private final LikeRepository likeRepository;
 
     public Long addLike(long filmId, long userId) {
-     return  likeRepository.addLike(filmId, userId);
+        return likeRepository.addLike(filmId, userId);
     }
 
     public Long removeLike(long filmId, long userId) {
         return likeRepository.removeLike(filmId, userId);
     }
 
-    public List <Film> getPopularFilms(int count) {
-      return filmRepository.getPopularFilms(count);
+    public List<Film> getPopularFilms(int count) {
+        return filmRepository.getPopularFilms(count);
     }
 
     public Film addFilm(Film film) {
         filmValidation(film);
         mpaService.getMpaById(film.getMpa().getId());
-//        for (Genre genre : film.getGenres()) {
-//            genreService.getGenreById(genre.getId());
-//        }
         return filmRepository.create(film);
     }
 
@@ -61,14 +56,6 @@ public class FilmService {
         return filmRepository.findAll();
     }
 
-    private void checkFilmAndUser(long userId, long filmId) {
-        if (userRepository.findById(userId) == null) {
-            throw new NotFoundException("Юзер с таким id не найден " + userId);
-        }
-        if (filmRepository.findById(filmId) == null) {
-            throw new NotFoundException("Фильм с таким id не найден " + filmId);
-        }
-    }
 
     private static void filmValidation(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {

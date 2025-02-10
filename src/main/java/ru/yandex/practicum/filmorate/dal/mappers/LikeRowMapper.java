@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class LikeRowMapper implements RowMapper <Likes> {
+public class LikeRowMapper implements RowMapper<Likes> {
 
     @Override
     public Likes mapRow(ResultSet rs, int rowNum) throws SQLException {

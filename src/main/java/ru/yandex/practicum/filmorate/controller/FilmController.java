@@ -2,12 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dal.LikeRepository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -23,15 +21,15 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    @PutMapping ("/{filmId}/like/{userId}")
+    @PutMapping("/{filmId}/like/{userId}")
     public void addLike(@PathVariable() Long filmId, @PathVariable Long userId) {
         filmService.addLike(filmId, userId);
     }
 
-    @DeleteMapping ("/{filmId}/like/{userId}")
-        public void deleteLike(@PathVariable() Long filmId, @PathVariable Long userId) {
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void deleteLike(@PathVariable() Long filmId, @PathVariable Long userId) {
         filmService.removeLike(filmId, userId);
-        }
+    }
 
 
     @PostMapping

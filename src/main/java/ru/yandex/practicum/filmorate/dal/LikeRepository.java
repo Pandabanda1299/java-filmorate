@@ -2,11 +2,9 @@ package ru.yandex.practicum.filmorate.dal;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.ILoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.dal.mappers.LikeRowMapper;
 import ru.yandex.practicum.filmorate.model.Likes;
 
 import java.sql.ResultSet;
@@ -25,7 +23,7 @@ public class LikeRepository {
 
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper <Likes> likeRowMapper;
+    private final RowMapper<Likes> likeRowMapper;
 
     public Long addLike(long filmId, long userId) {
         log.info("Adding like to " + filmId + " by user " + userId);
@@ -45,8 +43,7 @@ public class LikeRepository {
             public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getInt("user_id");
             }
-        },filmId));
+        }, filmId));
         return userId;
     }
-    //ОТЬЕБНУЛИ ЖАНРЫ НАДО ФИКСИТЬ СУКА БЛЯТЬ
 }

@@ -36,7 +36,6 @@ public class FilmRowMapper implements RowMapper<Film> {
         film.setReleaseDate(rs.getDate("releaseDate").toLocalDate());
         film.setDuration(rs.getInt("duration"));
 
-        // В РЕПОЗИТОРИИ ЖАНРОВ НУЖНО НАЙТИ ЖАНР ПО АЙДИШНИКУ И ЗАСЕТАТЬ ФИЛЬМ
 
         Long mpaId = rs.getLong("rating_id");
         Mpa mpa = mpaRepository.getMpaById(mpaId, () -> new NotFoundException("MPA с id " + mpaId + " не найден"));
