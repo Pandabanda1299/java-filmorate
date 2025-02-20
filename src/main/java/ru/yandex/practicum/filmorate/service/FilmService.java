@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.List;
-//добавление популярных фильмов, добавление лайков и удаление.
+
 
 @Slf4j
 @Service
@@ -43,9 +43,10 @@ public class FilmService {
     }
 
     public Film getFilmById(Long filmId) {
-        genreRepository.load();
-        return filmRepository.findById(filmId);
+        Film film = filmRepository.findById(filmId);
+        return film;
     }
+
 
     public Film updateFilm(Film film) {
         filmValidation(film);
