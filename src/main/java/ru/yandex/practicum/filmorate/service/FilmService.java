@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmRepository;
+import ru.yandex.practicum.filmorate.dal.GenreRepository;
 import ru.yandex.practicum.filmorate.dal.LikeRepository;
-import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -20,10 +20,9 @@ public class FilmService {
     public static final Integer MAX_DESCRIPTION_LENGTH = 200;
     public static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     private final FilmRepository filmRepository;
-    private final UserRepository userRepository;
     private final MpaService mpaService;
-    private final GenreService genreService;
     private final LikeRepository likeRepository;
+    private final GenreRepository genreRepository;
 
     public Long addLike(long filmId, long userId) {
         return likeRepository.addLike(filmId, userId);
@@ -43,7 +42,8 @@ public class FilmService {
         return filmRepository.create(film);
     }
 
-    public Film getFilmById(long filmId) {
+    public Film getFilmById(Long filmId) {
+        genreRepository.load();
         return filmRepository.findById(filmId);
     }
 
@@ -52,8 +52,11 @@ public class FilmService {
         return filmRepository.update(film);
     }
 
-    public List<Film> getFilms() {
-        return filmRepository.findAll();
+
+    public List<Film> getAllFilms() {
+        final List<Film> films = filmRepository.findAll();
+        genreRepository.load(films);
+        return films;
     }
 
 

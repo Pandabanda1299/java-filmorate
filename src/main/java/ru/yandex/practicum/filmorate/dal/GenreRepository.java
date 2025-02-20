@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.function.UnaryOperator.identity;
+
 @Repository
 public class GenreRepository extends BaseRepository<Genre> {
 
@@ -61,25 +63,18 @@ public class GenreRepository extends BaseRepository<Genre> {
 
     public void load(List<Film> films) {
         String inSql = String.join(",", Collections.nCopies(films.size(), "?"));
-        Map<Long, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, film -> film));
-
-        String sqlQuery = "SELECT g.genre_id, g.name, fg.film_id FROM genres g " +
-                "JOIN film_genres fg ON g.genre_id = fg.genre_id " +
-                "WHERE fg.film_id IN (" + inSql + ")";
-
-        jdbc.query(sqlQuery, (ResultSet rs) -> {
-            Film film = filmById.get(rs.getLong("film_id"));
-            if (film != null) {
-                film.getGenres().add(makeGenre(rs));
-            }
+        final Map<Long, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
+        final String sqlQuery = "select * from GENRE g, FILM_GENRE fg where fg.GENRE_ID = g.ID AND fg.FILM_ID in (" + inSql + ")";
+        jdbc.query(sqlQuery, (rs) -> {
+            final Film film = filmById.get(rs.getLong("FILM_ID"));
+            film.getGenres().add(makeGenre(rs, 0));
         }, films.stream().map(Film::getId).toArray());
     }
 
-    private Genre makeGenre(ResultSet rs) throws SQLException {
-        return Genre.builder()
-                .id(rs.getLong("id"))
-                .name(rs.getString("name"))
-                .build();
-    }
 
+    static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
+        return new Genre(
+                rs.getLong("genre_id"),
+                rs.getString("name"));
+    }
 }

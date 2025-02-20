@@ -18,13 +18,8 @@ import java.util.List;
 @Slf4j
 @Repository
 public class FilmRepository extends BaseRepository<Film> {
-    private static final String FIND_ALL_FILMS = "SELECT f.*, r.ID AS rating_id, r.name AS mpa_name " +
-            "FROM films f " +
-            "JOIN RATING r ON f.RATING_ID = r.ID";
-
-    private static final String MIN_MAX_GENRE_ID = "SELECT MIN(id) AS min_id, MAX(id) AS max_id FROM GENRE";
-    private static final String FIND_FILM_BY_ID = "SELECT * FROM FILMS WHERE ID = ?";
-
+    private static final String FIND_ALL_FILMS = "SELECT * FROM FILMS f, RATING m WHERE f.RATING_ID = m.ID";
+    private static final String FIND_FILM_BY_ID = "SELECT * FROM FILMS f, RATING m WHERE f.RATING_ID = m.ID AND f.ID = ?";
     private static final String CREATE_FILM_GENRES = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?, ?)";
     private static final String GET_POPULAR_FILMS = "SELECT f.*, COUNT(l.USER_ID) AS likes_count " +
             "FROM FILMS f " +
@@ -121,6 +116,7 @@ public class FilmRepository extends BaseRepository<Film> {
             }
         });
     }
+
 
     public List<Film> getPopularFilms(int count) {
         return jdbc.query(GET_POPULAR_FILMS, mapper, count);

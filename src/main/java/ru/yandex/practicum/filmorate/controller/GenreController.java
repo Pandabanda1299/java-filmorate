@@ -22,7 +22,7 @@ public class GenreController {
     public List<GenreDto> getAllGenres() {
         log.info("Получен запрос GET /genres");
         List<GenreDto> genres = genreService.getAllGenres();
-        log.info("Отправлен ответ GET /genres с количеством жанров: {}", genres.size());
+        log.info("Отправлен ответ GET /genres с количеством жанров: {}", genres);
         return genres;
     }
 

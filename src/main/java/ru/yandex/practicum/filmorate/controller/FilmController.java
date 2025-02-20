@@ -49,7 +49,7 @@ public class FilmController {
     @GetMapping
     public List<Film> getAllFilms() {
         log.info("Получение всех фильмов: {}");
-        return filmService.getFilms();
+        return filmService.getAllFilms();
     }
 
     @GetMapping("/{filmId}")
