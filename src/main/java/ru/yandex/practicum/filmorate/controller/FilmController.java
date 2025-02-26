@@ -21,6 +21,17 @@ public class FilmController {
 
     private final FilmService filmService;
 
+    @PutMapping("/{filmId}/like/{userId}")
+    public void addLike(@PathVariable() Long filmId, @PathVariable Long userId) {
+        filmService.addLike(filmId, userId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void deleteLike(@PathVariable() Long filmId, @PathVariable Long userId) {
+        filmService.removeLike(filmId, userId);
+    }
+
+
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
         log.info("Добавлен новый фильм: {}", film);
@@ -29,7 +40,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid Film film) {
-        log.info("Обновление фильма: {}");
+        log.info("Обновление фильма: {}", film);
         Film upFilm = filmService.updateFilm(film);
         log.info("Отправлен ответ PUT /films с телом: {}", film);
         return upFilm;
@@ -38,30 +49,19 @@ public class FilmController {
     @GetMapping
     public List<Film> getAllFilms() {
         log.info("Получение всех фильмов: {}");
-        return filmService.getFilms();
+        return filmService.getAllFilms();
     }
 
     @GetMapping("/{filmId}")
     public Film getFilm(@PathVariable(value = "filmId") long filmId) {
-        log.info("Получение фильма по id: {}");
+        log.info("Получение фильма по id: {}", filmId);
         return filmService.getFilmById(filmId);
     }
 
-    @PutMapping("/{filmId}/like/{userId}")
-    public Film addLike(@PathVariable(value = "userId") long userId, @PathVariable(value = "filmId") long filmId) {
-        log.info("Добавление лайка к фильму с id: {}");
-        return filmService.addLike(userId, filmId);
-    }
-
-    @DeleteMapping("/{filmId}/like/{userId}")
-    public Film removeLike(@PathVariable(value = "userId") long userId, @PathVariable(value = "filmId") long filmId) {
-        log.info("Удаление лайка с фильма по id: {}");
-        return filmService.removeLike(userId, filmId);
-    }
-
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer limit) {
-        log.info("Получение популярных фильмов с лимитом: {}");
-        return filmService.popularFilm(limit);
+    public List<Film> getPopularFilms(@RequestParam int count) {
+        List<Film> popular = filmService.getPopularFilms(count);
+        log.info("Подсчет популярности " + popular);
+        return popular;
     }
 }

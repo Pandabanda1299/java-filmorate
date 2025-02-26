@@ -3,15 +3,15 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.dal.FilmRepository;
+import ru.yandex.practicum.filmorate.dal.GenreRepository;
+import ru.yandex.practicum.filmorate.dal.LikeRepository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
-//добавление популярных фильмов, добавление лайков и удаление.
+
 
 @Slf4j
 @Service
@@ -19,62 +19,47 @@ import java.util.List;
 public class FilmService {
     public static final Integer MAX_DESCRIPTION_LENGTH = 200;
     public static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
-    private final InMemoryFilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final FilmRepository filmRepository;
+    private final MpaService mpaService;
+    private final LikeRepository likeRepository;
+    private final GenreRepository genreRepository;
 
+    public Long addLike(long filmId, long userId) {
+        return likeRepository.addLike(filmId, userId);
+    }
+
+    public Long removeLike(long filmId, long userId) {
+        return likeRepository.removeLike(filmId, userId);
+    }
+
+    public List<Film> getPopularFilms(int count) {
+        return filmRepository.getPopularFilms(count);
+    }
 
     public Film addFilm(Film film) {
         filmValidation(film);
-        return filmStorage.addFilm(film);
+        mpaService.getMpaById(film.getMpa().getId());
+        return filmRepository.create(film);
     }
 
-    public Film addLike(long userId, long filmId) {
-        checkFilmAndUser(userId, filmId);
-        Film film = filmStorage.getFilmById(filmId);
-        film.addLike(userId);
-        log.info("Вы поставили лайк ");
+    public Film getFilmById(Long filmId) {
+        Film film = filmRepository.findById(filmId);
         return film;
     }
 
-    public Film getFilmById(long filmId) {
-        return filmStorage.getFilmById(filmId);
-    }
 
     public Film updateFilm(Film film) {
         filmValidation(film);
-        return filmStorage.updateFilm(film);
+        return filmRepository.update(film);
     }
 
-    public List<Film> getFilms() {
-        return filmStorage.getFilms();
+
+    public List<Film> getAllFilms() {
+        final List<Film> films = filmRepository.findAll();
+        genreRepository.load(films);
+        return films;
     }
 
-    public Film removeLike(long userId, long filmId) {
-        checkFilmAndUser(userId, filmId);
-        Film film = filmStorage.getFilmById(filmId);
-        film.removeLike(userId);
-        log.info("Вы убрали лайк ");
-        return film;
-    }
-
-    public List<Film> popularFilm(Integer limit) {
-        return filmStorage.getFilms()
-                .stream()
-                .sorted(((film1, film2) ->
-                        Long.compare(film2.getRate(),
-                                film1.getRate())))
-                .limit(limit)
-                .toList();
-    }
-
-    private void checkFilmAndUser(long userId, long filmId) {
-        if (userStorage.getUserById(userId) == null) {
-            throw new NotFoundException("Юзер с таким id не найден " + userId);
-        }
-        if (filmStorage.getFilmById(filmId) == null) {
-            throw new NotFoundException("Фильм с таким id не найден " + filmId);
-        }
-    }
 
     private static void filmValidation(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
